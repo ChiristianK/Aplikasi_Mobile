@@ -7,8 +7,9 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import { Link } from 'react-router-native';
 
-const UserRegistrationForm = () => {
+const AddData = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -88,6 +89,7 @@ const UserRegistrationForm = () => {
 
   return (
     <View style={styles.container}>
+      <Link to="/"><Text>Home</Text></Link>
       <Text style={styles.title}>User Registration</Text>
       
       <View style={styles.inputContainer}>
@@ -179,4 +181,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UserRegistrationForm;
+export default AddData;

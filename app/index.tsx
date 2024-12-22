@@ -1,15 +1,16 @@
 import { Text, View } from "react-native";
+import { Link, NativeRouter, Route, Routes } from "react-router-native";
+import AddData from "./AddData";
+import HomePage from "./HomePage";
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <NativeRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />}/>
+        <Route path="/add" element={<AddData />} />
+      </Routes>
+    </NativeRouter>
+
   );
 }

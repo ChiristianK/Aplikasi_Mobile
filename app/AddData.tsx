@@ -1,72 +1,67 @@
 import React, { useState } from 'react';
 import {
   View,
-  TextInput,
   Text,
+  TextInput,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
   Alert,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Link } from 'react-router-native';
 
-const AddData = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    age: '',
-  });
+interface CourseFormData {
+  name: string;
+  course: string;
+  description: string;
+  lecturer: string;
+  is_finished: boolean;
+  start_date: Date;
+  end_date: Date;
+}
 
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    age: '',
-  });
+interface FormErrors {
+  name?: string;
+  course?: string;
+  description?: string;
+  lecturer?: string;
+  date?: string;
+}
 
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors = {
-      name: '',
-      email: '',
-      age: '',
-    };
+const initialFormData: CourseFormData = {
+  name: '',
+  course: '',
+  description: '',
+  lecturer: '',
+  is_finished: false,
+  start_date: new Date(),
+  end_date: new Date(),
+};
 
-    // Name validation
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-      isValid = false;
-    } else if (formData.name.length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-      isValid = false;
+const AddData: React.FC = () => {
+  const [formData, setFormData] = useState<CourseFormData>(initialFormData);
+  const [showStartDate, setShowStartDate] = useState<boolean>(false);
+  const [showEndDate, setShowEndDate] = useState<boolean>(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  const validateForm = (): boolean => {
+    let tempErrors: FormErrors = {};
+    if (!formData.name) tempErrors.name = 'Name is required';
+    if (!formData.course) tempErrors.course = 'Course is required';
+    if (!formData.description) tempErrors.description = 'Description is required';
+    if (!formData.lecturer) tempErrors.lecturer = 'Lecturer is required';
+    if (formData.end_date < formData.start_date) {
+      tempErrors.date = 'End date cannot be before start date';
     }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-      isValid = false;
-    } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-      isValid = false;
-    }
-
-    // Age validation
-    const ageNum = parseInt(formData.age);
-    if (!formData.age.trim()) {
-      newErrors.age = 'Age is required';
-      isValid = false;
-    } else if (isNaN(ageNum) || ageNum < 0 || ageNum > 120) {
-      newErrors.age = 'Please enter a valid age between 0 and 120';
-      isValid = false;
-    }
-
-    setErrors(newErrors);
-    return isValid;
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (validateForm()) {
       try {
-        const response = await fetch('YOUR_BACKEND_API_URL', {
+        const response = await fetch('https://apmob.myfirnanda.my.id/api/tasks', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -75,63 +70,137 @@ const AddData = () => {
         });
 
         if (response.ok) {
-          Alert.alert('Success', 'User data submitted successfully!');
-          setFormData({ name: '', email: '', age: '' }); // Reset form
+          Alert.alert('Success', 'Course added successfully!');
+          setFormData(initialFormData);
         } else {
-          throw new Error('Failed to submit data');
+          Alert.alert('Error', 'Failed to add course');
         }
       } catch (error) {
-        Alert.alert('Error', 'Failed to submit data. Please try again.');
-        console.error('Error submitting form:', error);
+        Alert.alert('Error', 'Network error occurred');
       }
     }
   };
 
+  const onStartDateChange = (_: any, selectedDate?: Date): void => {
+    setShowStartDate(false);
+    if (selectedDate) {
+      setFormData({ ...formData, start_date: selectedDate });
+    }
+  };
+
+  const onEndDateChange = (_: any, selectedDate?: Date): void => {
+    setShowEndDate(false);
+    if (selectedDate) {
+      setFormData({ ...formData, end_date: selectedDate });
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Link to="/"><Text>Home</Text></Link>
-      <Text style={styles.title}>User Registration</Text>
-      
+      <Text style={styles.title}>Add New Course</Text>
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Name</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter your name"
           value={formData.name}
-          onChangeText={(text) => setFormData({ ...formData, name: text })}
+          onChangeText={(text: string) => setFormData({ ...formData, name: text })}
+          placeholder="Enter name"
         />
-        {errors.name ? <Text style={styles.errorText}>{errors.name}</Text> : null}
+        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Email</Text>
+        <Text style={styles.label}>Course</Text>
         <TextInput
           style={styles.input}
-          placeholder="Enter your email"
-          value={formData.email}
-          onChangeText={(text) => setFormData({ ...formData, email: text })}
-          keyboardType="email-address"
-          autoCapitalize="none"
+          value={formData.course}
+          onChangeText={(text: string) => setFormData({ ...formData, course: text })}
+          placeholder="Enter course name"
         />
-        {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+        {errors.course && <Text style={styles.errorText}>{errors.course}</Text>}
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Age</Text>
+        <Text style={styles.label}>Description</Text>
         <TextInput
-          style={styles.input}
-          placeholder="Enter your age"
-          value={formData.age}
-          onChangeText={(text) => setFormData({ ...formData, age: text })}
-          keyboardType="numeric"
+          style={[styles.input, styles.textArea]}
+          value={formData.description}
+          onChangeText={(text: string) => setFormData({ ...formData, description: text })}
+          placeholder="Enter course description"
+          multiline
+          numberOfLines={4}
         />
-        {errors.age ? <Text style={styles.errorText}>{errors.age}</Text> : null}
+        {errors.description && (
+          <Text style={styles.errorText}>{errors.description}</Text>
+        )}
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Lecturer</Text>
+        <TextInput
+          style={styles.input}
+          value={formData.lecturer}
+          onChangeText={(text: string) => setFormData({ ...formData, lecturer: text })}
+          placeholder="Enter lecturer name"
+        />
+        {errors.lecturer && <Text style={styles.errorText}>{errors.lecturer}</Text>}
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Status</Text>
+        <TouchableOpacity
+          style={styles.statusButton}
+          onPress={() =>
+            setFormData({ ...formData, is_finished: !formData.is_finished })
+          }
+        >
+          <Text style={styles.statusText}>
+            {formData.is_finished ? 'Finished' : 'Ongoing'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Start Date</Text>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={() => setShowStartDate(true)}
+        >
+          <Text>{formData.start_date.toLocaleDateString()}</Text>
+        </TouchableOpacity>
+        {showStartDate && (
+          <DateTimePicker
+            value={formData.start_date}
+            mode="date"
+            onChange={onStartDateChange}
+          />
+        )}
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>End Date</Text>
+        <TouchableOpacity
+          style={styles.dateButton}
+          onPress={() => setShowEndDate(true)}
+        >
+          <Text>{formData.end_date.toLocaleDateString()}</Text>
+        </TouchableOpacity>
+        {showEndDate && (
+          <DateTimePicker
+            value={formData.end_date}
+            mode="date"
+            onChange={onEndDateChange}
+          />
+        )}
+        {errors.date && <Text style={styles.errorText}>{errors.date}</Text>}
+      </View>
+
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <Text style={styles.submitButtonText}>Submit</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -153,7 +222,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 5,
-    color: '#333',
+    fontWeight: '500',
   },
   input: {
     borderWidth: 1,
@@ -162,19 +231,38 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top',
+  },
   errorText: {
     color: 'red',
     fontSize: 12,
     marginTop: 5,
   },
-  button: {
+  statusButton: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  statusText: {
+    fontSize: 16,
+  },
+  dateButton: {
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 8,
+  },
+  submitButton: {
     backgroundColor: '#007AFF',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
+    marginBottom: 40,
   },
-  buttonText: {
+  submitButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

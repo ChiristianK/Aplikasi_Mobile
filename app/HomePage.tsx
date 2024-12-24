@@ -24,9 +24,11 @@ const Homepage = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('https://apmob.myfirnanda.my.id/api/tasks');
+        const response = await fetch('https://apmob.myfirnanda.my.id/api/tasks', {
+          method: 'GET'
+        });
         const data = await response.json();
-        
+
         if (Array.isArray(data)) {
           setTasks(data); 
         } else {

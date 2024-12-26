@@ -35,18 +35,15 @@ const Login = ({ navigation }) => {
       );
 
       if (response.data.success) {
-        // Jika login berhasil, tampilkan pesan sukses dan navigasi ke halaman Home
         Alert.alert("Sukses", "Login berhasil!");
         navigation.navigate("HomePage");
       } else {
-        // Jika login gagal, tampilkan pesan error
         Alert.alert(
           "Error",
           response.data.message || "Email atau Password salah"
         );
       }
     } catch (error) {
-      // Menangani kesalahan API atau koneksi
       Alert.alert("Error", "Terjadi kesalahan saat login");
       console.error(error);
     }

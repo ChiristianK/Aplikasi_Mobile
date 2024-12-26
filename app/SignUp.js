@@ -1,3 +1,4 @@
+// src/screens/SignUp.js
 import React, { useState } from "react";
 import {
   View,
@@ -5,25 +6,72 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from "react-native";
+import axios from "axios"; // Import axios
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [npm, setNpm] = useState("");
 
-  const handleSignUp = () => {
-    // Logika sign-up (validasi dan menyimpan data ke database)
-    if (!email || !password) {
-      alert("Email dan Password harus diisi!");
+  const handleSignUp = async () => {
+    // Validasi form
+    if (!name || !email || !password || !npm) {
+      alert("Nama, NPM, Email, dan Password harus diisi!");
       return;
     }
-    console.log("SignUp:", email, password);
-    navigation.navigate("Login");
+
+    // Membuat data untuk dikirim ke API
+    const userData = {
+      name,
+      npm,
+      email,
+      password,
+    };
+
+    try {
+      // Mengirim data ke API menggunakan axios
+      const response = await axios.post(
+        "https://apmob.myfirnanda.my.id/api/signup",
+        userData
+      );
+
+      if (response.data.success) {
+        // Menangani sukses response dari API
+        Alert.alert("Sukses", "Akun berhasil dibuat!");
+        navigation.navigate("Login");
+      } else {
+        // Menangani error jika response tidak sukses
+        Alert.alert("Error", response.data.message || "Gagal membuat akun");
+      }
+    } catch (error) {
+      // Menangani kesalahan koneksi atau API error
+      Alert.alert("Error", "Terjadi kesalahan saat membuat akun");
+      console.error(error);
+    }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
+
+      <TextInput
+        placeholder="Nama Lengkap"
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+      />
+
+      <TextInput
+        placeholder="NPM"
+        style={styles.input}
+        value={npm}
+        onChangeText={setNpm}
+        keyboardType="numeric"
+      />
+
       <TextInput
         placeholder="Email"
         style={styles.input}
@@ -31,6 +79,7 @@ const SignUp = ({ navigation }) => {
         onChangeText={setEmail}
         keyboardType="email-address"
       />
+
       <TextInput
         placeholder="Password"
         style={styles.input}
@@ -38,9 +87,11 @@ const SignUp = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
+
       <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
+
       <TouchableOpacity onPress={() => navigation.navigate("Login")}>
         <Text style={styles.link}>Sudah punya akun? Login</Text>
       </TouchableOpacity>

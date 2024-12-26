@@ -29,7 +29,7 @@ const Login = ({ navigation }) => {
     try {
       // Mengirimkan data login ke API
       const response = await axios.post(
-        "https://apmob.myfirnanda.my.id/api/login", // Ganti dengan endpoint API login yang sesuai
+        "https://apmob.myfirnanda.my.id/api/login",
         loginData
       );
 

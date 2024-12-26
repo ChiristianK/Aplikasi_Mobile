@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
       if (response.data.success) {
         // Jika login berhasil, tampilkan pesan sukses dan navigasi ke halaman Home
         Alert.alert("Sukses", "Login berhasil!");
-        navigation.navigate("Home");
+        navigation.navigate("HomePage");
       } else {
         // Jika login gagal, tampilkan pesan error
         Alert.alert(

@@ -9,10 +9,12 @@ import {
   Alert,
 } from "react-native";
 import axios from "axios"; // Import axios
+import Icon from "react-native-vector-icons/Ionicons"; // Import ikon
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     // Validasi form
@@ -36,7 +38,7 @@ const Login = ({ navigation }) => {
       if (response.data.success) {
         // Jika login berhasil, tampilkan pesan sukses dan navigasi ke halaman Home
         Alert.alert("Sukses", "Login berhasil!");
-        navigation.navigate("HomePage");
+        navigation.navigate("Home");
       } else {
         // Jika login gagal, tampilkan pesan error
         Alert.alert(
@@ -63,13 +65,25 @@ const Login = ({ navigation }) => {
         keyboardType="email-address"
       />
 
-      <TextInput
-        placeholder="Password"
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Password"
+          style={styles.input}
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Icon
+            name={showPassword ? "eye-off" : "eye"}
+            size={24}
+            color="#888"
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
@@ -96,12 +110,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
+  inputContainer: {
+    position: "relative",
+  },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
+    paddingRight: 40,
     marginVertical: 10,
+  },
+  iconContainer: {
+    position: "absolute",
+    right: 10,
+    top: "50%",
+    transform: [{ translateY: -12 }],
   },
   button: {
     backgroundColor: "blue",

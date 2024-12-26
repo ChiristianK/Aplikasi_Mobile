@@ -18,7 +18,7 @@ const Login = ({ navigation }) => {
       return;
     }
     console.log("Login:", email, password);
-    navigation.navigate("Home");
+    navigation.navigate("HomePage");
   };
 
   return (

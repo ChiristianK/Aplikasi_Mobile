@@ -1,4 +1,3 @@
-// src/screens/SignUp.js
 import React, { useState } from "react";
 import {
   View,
@@ -8,23 +7,24 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
-import axios from "axios"; // Import axios
+import axios from "axios";
+import Icon from "react-native-vector-icons/Ionicons"; // Import ikon
 
 const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [npm, setNpm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignUp = async () => {
     // Validasi form
     if (!name || !email || !password || !npm) {
-      alert("Nama, NPM, Email, dan Password harus diisi!");
+      Alert.alert("Error", "Nama, NPM, Email, dan Password harus diisi!");
       return;
     }
 
-    // Membuat data untuk dikirim ke API
-    const userData = {
+    const signupData = {
       name,
       npm,
       email,
@@ -32,24 +32,24 @@ const SignUp = ({ navigation }) => {
     };
 
     try {
-      // Mengirim data ke API menggunakan axios
+      // Kirim data ke API
       const response = await axios.post(
         "https://apmob.myfirnanda.my.id/api/signup",
-        userData
+        signupData
       );
 
       if (response.data.success) {
-        // Menangani sukses response dari API
         Alert.alert("Sukses", "Akun berhasil dibuat!");
         navigation.navigate("Login");
       } else {
-        // Menangani error jika response tidak sukses
         Alert.alert("Error", response.data.message || "Gagal membuat akun");
       }
     } catch (error) {
-      // Menangani kesalahan koneksi atau API error
-      Alert.alert("Error", "Terjadi kesalahan saat membuat akun");
-      console.error(error);
+      console.error("Error response:", error.response);
+      Alert.alert(
+        "Error",
+        error.response?.data?.message || "Terjadi kesalahan saat membuat akun"
+      );
     }
   };
 
@@ -80,13 +80,25 @@ const SignUp = ({ navigation }) => {
         keyboardType="email-address"
       />
 
-      <TextInput
-        placeholder="Password"
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Password"
+          style={styles.input}
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity
+          style={styles.iconContainer}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Icon
+            name={showPassword ? "eye-off" : "eye"}
+            size={24}
+            color="#888"
+          />
+        </TouchableOpacity>
+      </View>
 
       <TouchableOpacity style={styles.button} onPress={handleSignUp}>
         <Text style={styles.buttonText}>Sign Up</Text>
@@ -113,12 +125,22 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
+  inputContainer: {
+    position: "relative",
+  },
   input: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
+    paddingRight: 40,
     marginVertical: 10,
+  },
+  iconContainer: {
+    position: "absolute",
+    right: 10,
+    top: "50%",
+    transform: [{ translateY: -12 }],
   },
   button: {
     backgroundColor: "green",

@@ -34,7 +34,7 @@ const SignUp = ({ navigation }) => {
     try {
       // Kirim data ke API
       const response = await axios.post(
-        "https://apmob.myfirnanda.my.id/api/signup",
+        "https://apmob.myfirnanda.my.id/api/register",
         signupData
       );
 

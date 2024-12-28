@@ -43,7 +43,7 @@ const SignUp = () => {
 
       if (response.data.success) {
         Alert.alert("Sukses", "Akun berhasil dibuat!");
-        navigate("/");
+        navigate("/login");
       } else {
         Alert.alert("Error", response.data.message || "Gagal membuat akun");
       }
@@ -107,7 +107,7 @@ const SignUp = () => {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigate("/")}>
+      <TouchableOpacity onPress={() => navigate("/login")}>
         <Text style={styles.link}>Sudah punya akun? Login</Text>
       </TouchableOpacity>
     </View>

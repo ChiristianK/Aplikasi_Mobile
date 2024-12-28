@@ -69,53 +69,70 @@ const Homepage: React.FC = () => {
   const completedTasks = tasks.filter(task => task.end_date < currentDate);
   const incompleteTasks = tasks.filter(task => task.end_date >= currentDate);
 
+  // Fungsi untuk menghapus tugas
+  const deleteTask = async (id: number) => {
+    Alert.alert(
+      'Delete Task',
+      'Are you sure you want to delete this task?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: async () => {
+            try {
+              const response = await axios.delete(`https://apmob.myfirnanda.my.id/api/tasks/${id}`, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`,
+                },
+              });
+
+              if (response.status === 200) {
+                // Hapus tugas dari state
+                setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
+                Alert.alert('Success', 'Task deleted successfully!');
+              } else {
+                Alert.alert('Error', 'Failed to delete task');
+              }
+            } catch (error) {
+              console.error('Error deleting task:', error);
+              Alert.alert('Error', 'Failed to delete task: ' + error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Completed Tasks</Text>
-          {completedTasks.length > 0 ? (
-            completedTasks.map(task => (
-              <View key={task.id} style={styles.card}>
-                <Link to={`/EditData/${task.id}`}>
-                  <View style={styles.cardFlex}>
-                    <View style={styles.cardText}>
-                      <Text style={styles.taskText}>{task.name}</Text>
-                      <View style={styles.space}>
-                        <Text>{task.course}</Text>
-                        <Text>{task.lecturer}</Text>
-                      </View>
-                    </View>
-                    <View style={styles.cardDelete}>
-                      <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
-                        <Text style={styles.deleteButton}>Delete Task</Text>
-                      </TouchableOpacity>
+        {completedTasks.length > 0 ? (
+          completedTasks.map(task => (
+            <View key={task.id} style={styles.card}>
+              <Link to={`/EditData/${task.id}`}>
+                < View style={styles.cardFlex}>
+                  <View style={styles.cardText}>
+                    <Text style={styles.taskText}>{task.name}</Text>
+                    <View style={styles.space}>
+                      <Text>{task.course}</Text>
+                      <Text>{task.lecturer}</Text>
                     </View>
                   </View>
-                </Link>
-              </View>
-            ))
-          ) : (
-            <Text style={styles.noTasksText}>No tasks yet</Text>
-          )}
-
-        {/* <View style={styles.taskContainer}>
-          {completedTasks.map(task => (
-            <View key={task.id} style={styles.taskItem}>
-              <Link to={`/EditData/${task.id}`}>
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.taskText}>{task.name}</Text>
-                  <View style={styles.taskDiv}>
-                    <Text>{task.course}</Text>
-                    <Text>{task.lecturer}</Text>
+                  <View style={styles.cardDelete}>
+                    <TouchableOpacity onPress={() => deleteTask(task.id)}>
+                      <Text style={styles.deleteButton}>Delete Task</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               </Link>
-              <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
-                <Text style={styles.deleteButton}>Hapus</Text>
-              </TouchableOpacity>
             </View>
-          ))}
-        </View> */}
+          ))
+        ) : (
+          <Text style={styles.noTasksText}>No tasks yet</Text>
+        )}
 
         <Text style={styles.title}>Incomplete Tasks</Text>
         <View style={styles.content}>
@@ -132,7 +149,7 @@ const Homepage: React.FC = () => {
                       </View>
                     </View>
                     <View style={styles.cardDelete}>
-                      <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
+                      <TouchableOpacity onPress={() => deleteTask(task.id)}>
                         <Text style={styles.deleteButton}>Delete Task</Text>
                       </TouchableOpacity>
                     </View>
@@ -160,7 +177,6 @@ const Homepage: React.FC = () => {
           <Text style={styles.navButtonText}>Profile</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
@@ -178,9 +194,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginVertical: 10,
-  },
-  taskContainer: {
-    padding: 16,
   },
   card: {
     backgroundColor: "white",
@@ -200,26 +213,10 @@ const styles = StyleSheet.create({
     color: '#888',
   },
   cardText: {
-    // backgroundColor: "red",
     width: "76%",
   },
   cardDelete: {
-    // backgroundColor: "blue",
     width: "20%",
-  },
-  taskItem: {
-    backgroundColor: "#ffffff",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3, // For Android shadow
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
   taskText: {
     fontSize: 18,
@@ -232,22 +229,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "99%",
   },
-  // taskText: {
-  //   fontSize: 18,
-  //   fontWeight: "bold",
-  //   color: "#333",
-  //   marginBottom: 8,
-  // },
-  // taskDiv: {
-  //   flexDirection: "row",
-  //   justifyContent: "space-between",
-  //   marginTop: 8,
-  // },
-  // taskInfo: {
-  //   fontSize: 14,
-  //   color: "#555",
-  //   marginRight: 8,
-  // },
   deleteButton: {
     fontSize: 14,
     color: "#ff6b6b",
@@ -269,12 +250,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  profileButtonContainer: {
-    position: 'absolute',
-    bottom: 28,
-    alignSelf: 'center',
-  },
-
 });
 
 export default Homepage;

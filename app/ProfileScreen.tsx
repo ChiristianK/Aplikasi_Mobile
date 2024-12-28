@@ -1,7 +1,10 @@
 import React from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { Link, useNavigate } from 'react-router-native';
 
 const ProfileScreen = () => {
+  const navigate = useNavigate();
+
   const user = {
     profileImage: "https://via.placeholder.com/150", // Gambar profil
     name: "John Doe",
@@ -21,17 +24,17 @@ const ProfileScreen = () => {
 
       {/* Navigasi */}
       <View style={styles.navContainer}>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigate('/home')}>
           <Text style={styles.navButtonText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton}>
+        <Link to="/add" style={styles.navButton}>
           <Text style={styles.navButtonText}>Add Task</Text>
-        </TouchableOpacity>
+        </Link>
       </View>
 
       {/* Tombol Menuju Profile */}
       <View style={styles.profileButtonContainer}>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigate('/profile')}>
           <Text style={styles.navButtonText}>Go to Profile</Text>
         </TouchableOpacity>
       </View>

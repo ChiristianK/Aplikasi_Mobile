@@ -7,18 +7,20 @@ import EditData from "./EditData";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import ProfileScreen from "./ProfileScreen";
+import SplashScreen from "./SplashScreen";
 
 export default function Index() {
   return (
     <AuthProvider>
       <NativeRouter>
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/add" element={<AddData />} />
           <Route path="/edit" element={<EditData />} />
           <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/" element={<SplashScreen />} />
         </Routes>
       </NativeRouter>
     </AuthProvider>

@@ -18,8 +18,8 @@ interface CourseFormData {
   description: string;
   lecturer: string;
   is_finished: boolean;
-  start_date: Date; // BEFORE
-  end_date: string; // AFTER
+  start_date: string;
+  end_date: string;
 }
 
 interface FormErrors {
@@ -30,14 +30,18 @@ interface FormErrors {
   date?: string;
 }
 
+const formatDate = (date: Date): string => {
+  return date.toISOString().split('T')[0];
+};
+
 const initialFormData: CourseFormData = {
   name: '',
   course: '',
   description: '',
   lecturer: '',
   is_finished: false,
-  start_date: new Date(), // BEFORE
-  end_date: "2024-12-12", // AFTER
+  start_date: formatDate(new Date()),
+  end_date: formatDate(new Date()),
 };
 
 const AddData: React.FC = () => {
@@ -46,7 +50,6 @@ const AddData: React.FC = () => {
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const { token, logout } = useAuth();
-  console.log("Token:", token);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,7 +58,7 @@ const AddData: React.FC = () => {
       logout();
       navigate('/login');
     }
-  }, [token, logout, navigate])
+  }, [token, logout, navigate]);
 
   const validateForm = (): boolean => {
     let tempErrors: FormErrors = {};
@@ -87,7 +90,6 @@ const AddData: React.FC = () => {
           setFormData(initialFormData);
           navigate('/home');
         } else {
-          console.log(response);
           if (response.status === 401) {
             Alert.alert('Session expired', 'Please log in again.');
             logout();
@@ -106,14 +108,14 @@ const AddData: React.FC = () => {
   const onStartDateChange = (_: any, selectedDate?: Date): void => {
     setShowStartDate(false);
     if (selectedDate) {
-      setFormData({ ...formData, start_date: selectedDate });
+      setFormData({ ...formData, start_date: formatDate(selectedDate) });
     }
   };
 
   const onEndDateChange = (_: any, selectedDate?: Date): void => {
     setShowEndDate(false);
     if (selectedDate) {
-      setFormData({ ...formData, end_date: selectedDate });
+      setFormData({ ...formData, end_date: formatDate(selectedDate) });
     }
   };
 
@@ -194,7 +196,7 @@ const AddData: React.FC = () => {
         </TouchableOpacity>
         {showStartDate && (
           <DateTimePicker
-            value={formData.start_date}
+            value={new Date(formData.start_date)}
             mode="date"
             onChange={onStartDateChange}
           />
@@ -211,7 +213,7 @@ const AddData: React.FC = () => {
         </TouchableOpacity>
         {showEndDate && (
           <DateTimePicker
-            value={formData.end_date}
+            value={new Date(formData.end_date)}
             mode="date"
             onChange={onEndDateChange}
           />

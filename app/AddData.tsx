@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Link, useNavigate } from 'react-router-native';
-import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 interface CourseFormData {
@@ -19,8 +18,8 @@ interface CourseFormData {
   description: string;
   lecturer: string;
   is_finished: boolean;
-  start_date: Date;
-  end_date: Date;
+  start_date: Date; // BEFORE
+  end_date: string; // AFTER
 }
 
 interface FormErrors {
@@ -37,8 +36,8 @@ const initialFormData: CourseFormData = {
   description: '',
   lecturer: '',
   is_finished: false,
-  start_date: new Date(),
-  end_date: new Date(),
+  start_date: new Date(), // BEFORE
+  end_date: "2024-12-12", // AFTER
 };
 
 const AddData: React.FC = () => {
@@ -46,15 +45,15 @@ const AddData: React.FC = () => {
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
   const [errors, setErrors] = useState<FormErrors>({});
-  const { token, logout  } = useAuth();
+  const { token, logout } = useAuth();
   console.log("Token:", token);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!token) {
       Alert.alert('Error', 'Token tidak ditemukan. Silakan login kembali.');
-      logout(); // Logout pengguna
-      navigate('/login'); // Arahkan ke halaman login
+      logout();
+      navigate('/login');
     }
   }, [token, logout, navigate])
 
@@ -74,28 +73,32 @@ const AddData: React.FC = () => {
   const handleSubmit = async (): Promise<void> => {
     if (validateForm()) {
       try {
-        const response = await axios.post('https://apmob.myfirnanda.my.id/api/tasks', formData, {
+        const response = await fetch('https://apmob.myfirnanda.my.id/api/tasks', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
+          body: JSON.stringify(formData),
         });
 
-        if (response.status === 201) {
+        if (response.ok) {
           Alert.alert('Success', 'Course added successfully!');
           setFormData(initialFormData);
           navigate('/home');
         } else {
-          Alert.alert('Error', 'Failed to add course');
+          console.log(response);
+          if (response.status === 401) {
+            Alert.alert('Session expired', 'Please log in again.');
+            logout();
+            navigate('/login');
+          } else {
+            Alert.alert('Error', 'Failed to add course');
+          }
         }
       } catch (error) {
         Alert.alert('Error', 'Network error occurred');
         console.error(error);
-        if (error === 401) {
-          Alert.alert('Session expired', 'Please log in again.');
-          logout(); // Logout pengguna
-          navigate('/login'); // Arahkan ke halaman login
-        }
       }
     }
   };
@@ -187,7 +190,7 @@ const AddData: React.FC = () => {
           style={styles.dateButton}
           onPress={() => setShowStartDate(true)}
         >
-          <Text>{formData.start_date.toLocaleDateString()}</Text>
+          <Text>{formData.start_date}</Text>
         </TouchableOpacity>
         {showStartDate && (
           <DateTimePicker
@@ -204,7 +207,7 @@ const AddData: React.FC = () => {
           style={styles.dateButton}
           onPress={() => setShowEndDate(true)}
         >
-          <Text>{formData.end_date.toLocaleDateString()}</Text>
+          <Text>{formData.end_date}</Text>
         </TouchableOpacity>
         {showEndDate && (
           <DateTimePicker

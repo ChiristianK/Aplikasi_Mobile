@@ -9,13 +9,16 @@ import {
 } from "react-native";
 import axios from "axios";
 import Icon from "react-native-vector-icons/Ionicons"; // Import ikon
+import { Link, useNavigate } from 'react-router-native';
 
-const SignUp = ({ navigation }) => {
+const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [npm, setNpm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSignUp = async () => {
     // Validasi form
@@ -40,7 +43,7 @@ const SignUp = ({ navigation }) => {
 
       if (response.data.success) {
         Alert.alert("Sukses", "Akun berhasil dibuat!");
-        navigation.navigate("Login");
+        navigate("/");
       } else {
         Alert.alert("Error", response.data.message || "Gagal membuat akun");
       }
@@ -104,7 +107,7 @@ const SignUp = ({ navigation }) => {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+      <TouchableOpacity onPress={() => navigate("/")}>
         <Text style={styles.link}>Sudah punya akun? Login</Text>
       </TouchableOpacity>
     </View>

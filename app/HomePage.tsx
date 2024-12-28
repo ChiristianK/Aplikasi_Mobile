@@ -73,31 +73,76 @@ const Homepage: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Completed Tasks</Text>
-        <View style={styles.taskContainer}>
+          {completedTasks.length > 0 ? (
+            completedTasks.map(task => (
+              <View key={task.id} style={styles.card}>
+                <Link to={`/EditData/${task.id}`}>
+                  <View style={styles.cardFlex}>
+                    <View style={styles.cardText}>
+                      <Text style={styles.taskText}>{task.name}</Text>
+                      <View style={styles.space}>
+                        <Text>{task.course}</Text>
+                        <Text>{task.lecturer}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.cardDelete}>
+                      <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
+                        <Text style={styles.deleteButton}>Delete Task</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Link>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.noTasksText}>No tasks yet</Text>
+          )}
+
+        {/* <View style={styles.taskContainer}>
           {completedTasks.map(task => (
             <View key={task.id} style={styles.taskItem}>
-              <Link to={`/Edit`} style={{ flex: 1 }}>
-                <Text style={styles.taskText}>{task.name}</Text>
+              <Link to={`/EditData/${task.id}`}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.taskText}>{task.name}</Text>
+                  <View style={styles.taskDiv}>
+                    <Text>{task.course}</Text>
+                    <Text>{task.lecturer}</Text>
+                  </View>
+                </View>
               </Link>
               <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
-                <Text style={styles.deleteButton}>Delete</Text>
+                <Text style={styles.deleteButton}>Hapus</Text>
               </TouchableOpacity>
             </View>
           ))}
-        </View>
+        </View> */}
 
         <Text style={styles.title}>Incomplete Tasks</Text>
-        <View style={styles.taskContainer}>
-          {incompleteTasks.map(task => (
-            <View key={task.id} style={styles.taskItem}>
-              <Link to={`/Edit/${task.id}`} style={{ flex: 1 }}>
-                <Text style={styles.taskText}>{task.name}</Text>
-              </Link>
-              <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
-                <Text style={styles.deleteButton}>Delete</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+        <View style={styles.content}>
+          {incompleteTasks.length > 0 ? (
+            incompleteTasks.map(task => (
+              <View key={task.id} style={styles.card}>
+                <Link to={`/EditData/${task.id}`}>
+                  <View style={styles.cardFlex}>
+                    <View style={styles.cardText}>
+                      <Text style={styles.taskText}>{task.name}</Text>
+                      <View style={styles.space}>
+                        <Text>{task.course}</Text>
+                        <Text>{task.lecturer}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.cardDelete}>
+                      <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
+                        <Text style={styles.deleteButton}>Delete Task</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Link>
+              </View>
+            ))
+          ) : (
+            <Text style={styles.noTasksText}>No tasks yet</Text>
+          )}
         </View>
       </View>
 
@@ -131,30 +176,80 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   taskContainer: {
-    marginBottom: 20,
+    padding: 16,
+  },
+  card: {
+    backgroundColor: "white",
+    padding: 16,
+    borderRadius: 20,
+    marginBottom: 15,
+  },
+  cardFlex: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+  },
+  noTasksText: {
+    textAlign: 'center',
+    marginVertical: 20,
+    fontSize: 16,
+    color: '#888',
+  },
+  cardText: {
+    // backgroundColor: "red",
+    width: "76%",
+  },
+  cardDelete: {
+    // backgroundColor: "blue",
+    width: "20%",
   },
   taskItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 3,
+    backgroundColor: "#ffffff",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 3, // For Android shadow
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   taskText: {
     fontSize: 18,
-  },
-  deleteButton: {
-    color: 'red',
     fontWeight: 'bold',
+    color: "#333",
+  },
+  space: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "99%",
+  },
+  // taskText: {
+  //   fontSize: 18,
+  //   fontWeight: "bold",
+  //   color: "#333",
+  //   marginBottom: 8,
+  // },
+  // taskDiv: {
+  //   flexDirection: "row",
+  //   justifyContent: "space-between",
+  //   marginTop: 8,
+  // },
+  // taskInfo: {
+  //   fontSize: 14,
+  //   color: "#555",
+  //   marginRight: 8,
+  // },
+  deleteButton: {
+    fontSize: 14,
+    color: "#ff6b6b",
+    fontWeight: "600",
+    textAlign: "center",
+    display: "flex",
   },
   navContainer: {
     flexDirection: 'row',

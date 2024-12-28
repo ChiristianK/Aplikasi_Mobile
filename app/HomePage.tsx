@@ -4,7 +4,8 @@ import {
   Text, 
   StyleSheet, 
   TouchableOpacity, 
-  Alert 
+  Alert,
+  ScrollView
 } from 'react-native';
 import { Link, useNavigate } from 'react-router-native';
 import axios from 'axios';
@@ -126,7 +127,7 @@ const Homepage: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
+      <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Completed Tasks</Text>
         {completedTasks.length > 0 ? (
           completedTasks.map(task => (
@@ -144,10 +145,10 @@ const Homepage: React.FC = () => {
         ) : (
           <Text style={styles.noTasksText}>No incomplete tasks</Text>
         )}
-      </View>
+      </ScrollView>
 
       <View style={styles.navContainer}>
-        <TouchableOpacity style={styles.navButton}>
+        <TouchableOpacity style={styles.navButton} onPress={() => navigate('/')}>
           <Text style={styles.navButtonText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity 
@@ -242,6 +243,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#eee',
     paddingHorizontal: 20,
+    position: 'absolute', // Menjaga posisi tetap di bawah
+    bottom: 0, // Menempatkan di bagian bawah
+    left: 0,
+    right: 0,
   },
   navButton: {
     padding: 10,

@@ -150,13 +150,17 @@ const Homepage: React.FC = () => {
         <TouchableOpacity style={styles.navButton}>
           <Text style={styles.navButtonText}>Home</Text>
         </TouchableOpacity>
-        <Link to="/add" style={ styles.navButton}>
+        <Link to="/add" style={styles.navButton}>
           <Text style={styles.navButtonText}>Add Task</Text>
         </Link>
-        <Link to="/profil" style={styles.navButton}>
+        <TouchableOpacity 
+          style={styles.navButton} 
+          onPress={() => navigate('/profile')} // Navigasi ke halaman profil
+        >
           <Text style={styles.navButtonText}>Profile</Text>
-        </Link>
+        </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -265,6 +269,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  profileButtonContainer: {
+    position: 'absolute',
+    bottom: 28,
+    alignSelf: 'center',
+  },
+
 });
 
 export default Homepage;

@@ -6,6 +6,7 @@ import HomePage from "./HomePage";
 import EditData from "./EditData";
 import Login from "./Login";
 import SignUp from "./SignUp";
+import ProfileScreen from "./ProfileScreen";
 
 export default function Index() {
   return (
@@ -17,6 +18,7 @@ export default function Index() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/add" element={<AddData />} />
           <Route path="/edit" element={<EditData />} />
+          <Route path="/profile" element={<ProfileScreen />} />
         </Routes>
       </NativeRouter>
     </AuthProvider>

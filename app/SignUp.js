@@ -107,7 +107,7 @@ const SignUp = () => {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigate("/")}>
+      <TouchableOpacity onPress={() => navigate("/login")}>
         <Text style={styles.link}>Sudah punya akun? <Text style={{ fontWeight: 'bold', color: '"#4569FA !important"' }}>Login</Text></Text>
       </TouchableOpacity>
     </View>

@@ -101,8 +101,8 @@ const Login = () => {
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigate("signup")}>
-        <Text style={styles.link}>Belum punya akun? Daftar</Text>
+      <TouchableOpacity onPress={() => navigate("/signup")}>
+        <Text style={styles.link}>Belum punya akun? <Text style={{ fontWeight: 'bold', color: '"#4569FA"' }}>Daftar</Text></Text>
       </TouchableOpacity>
     </View>
   );
@@ -141,10 +141,11 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -12 }],
   },
   button: {
-    backgroundColor: "blue",
+    backgroundColor: "#4569FA",
     padding: 15,
     borderRadius: 5,
     alignItems: "center",
+    marginTop: 15,
   },
   buttonText: {
     color: "white",
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
   },
   link: {
     textAlign: "center",
-    color: "blue",
+    color: "lightgray",
     marginTop: 20,
   },
 });

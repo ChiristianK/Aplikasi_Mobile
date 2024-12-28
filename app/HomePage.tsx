@@ -98,36 +98,39 @@ const Homepage: React.FC = () => {
     navigate(`/edit/${taskId}`);
   };
 
+  const TaskCard = ({ task, isCompleted }: { task: Task, isCompleted: boolean }) => (
+    <View style={styles.card}>
+      <View style={styles.cardContent}>
+        <Text style={styles.taskText}>{task.name}</Text>
+        <View style={styles.space}>
+          <Text>{task.course}</Text>
+          <Text>{task.lecturer}</Text>
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={styles.editButton}
+          onPress={() => handleEditTask(task.id)}
+        >
+          <Text style={styles.editButtonText}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.deleteButton}
+          onPress={() => deleteTask(task.id)}
+        >
+          <Text style={styles.deleteButtonText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Completed Tasks</Text>
         {completedTasks.length > 0 ? (
           completedTasks.map(task => (
-            <TouchableOpacity 
-              key={task.id} 
-              style={styles.card}
-              onPress={() => handleEditTask(task.id)}
-            >
-              <View style={styles.cardFlex}>
-                <View style={styles.cardText}>
-                  <Text style={styles.taskText}>{task.name}</Text>
-                  <View style={styles.space}>
-                    <Text>{task.course}</Text>
-                    <Text>{task.lecturer}</Text>
-                  </View>
-                </View>
-                <TouchableOpacity 
-                  style={styles.cardDelete}
-                  onPress={(e) => {
-                    e.stopPropagation(); // Prevent triggering the parent's onPress
-                    deleteTask(task.id);
-                  }}
-                >
-                  <Text style={styles.deleteButton}>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
+            <TaskCard key={task.id} task={task} isCompleted={true} />
           ))
         ) : (
           <Text style={styles.noTasksText}>No completed tasks</Text>
@@ -136,30 +139,7 @@ const Homepage: React.FC = () => {
         <Text style={styles.title}>Incomplete Tasks</Text>
         {incompleteTasks.length > 0 ? (
           incompleteTasks.map(task => (
-            <TouchableOpacity 
-              key={task.id} 
-              style={styles.card}
-              onPress={() => handleEditTask(task.id)}
-            >
-              <View style={styles.cardFlex}>
-                <View style={styles.cardText}>
-                  <Text style={styles.taskText}>{task.name}</Text>
-                  <View style={styles.space}>
-                    <Text>{task.course}</Text>
-                    <Text>{task.lecturer}</Text>
-                  </View>
-                </View>
-                <TouchableOpacity 
-                  style={styles.cardDelete}
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    deleteTask(task.id);
-                  }}
-                >
-                  <Text style={styles.deleteButton}>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
+            <TaskCard key={task.id} task={task} isCompleted={false} />
           ))
         ) : (
           <Text style={styles.noTasksText}>No incomplete tasks</Text>
@@ -208,19 +188,8 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     elevation: 2,
   },
-  cardFlex: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  cardText: {
-    flex: 1,
-    marginRight: 10,
-  },
-  cardDelete: {
-    backgroundColor: '#ffebee',
-    padding: 8,
-    borderRadius: 8,
+  cardContent: {
+    marginBottom: 10,
   },
   taskText: {
     fontSize: 18,
@@ -232,7 +201,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 10,
+  },
+  editButton: {
+    backgroundColor: '#007BFF',
+    padding: 8,
+    borderRadius: 8,
+    minWidth: 70,
+    alignItems: 'center',
+  },
+  editButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
   deleteButton: {
+    backgroundColor: '#ffebee',
+    padding: 8,
+    borderRadius: 8,
+    minWidth: 70,
+    alignItems: 'center',
+  },
+  deleteButtonText: {
     color: '#ff5252',
     fontWeight: '600',
   },

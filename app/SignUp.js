@@ -58,7 +58,7 @@ const SignUp = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.title}>Let's, Sign Up</Text>
 
       <TextInput
         placeholder="Nama Lengkap"
@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
+    color: "#4569FA",
   },
   inputContainer: {
     position: "relative",

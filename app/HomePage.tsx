@@ -76,7 +76,7 @@ const Homepage: React.FC = () => {
         <View style={styles.taskContainer}>
           {completedTasks.map(task => (
             <View key={task.id} style={styles.taskItem}>
-              <Link to={`/EditData/${task.id}`} style={{ flex: 1 }}>
+              <Link to={`/Edit`} style={{ flex: 1 }}>
                 <Text style={styles.taskText}>{task.name}</Text>
               </Link>
               <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
@@ -90,7 +90,7 @@ const Homepage: React.FC = () => {
         <View style={styles.taskContainer}>
           {incompleteTasks.map(task => (
             <View key={task.id} style={styles.taskItem}>
-              <Link to={`/EditData/${task.id}`} style={{ flex: 1 }}>
+              <Link to={`/Edit/${task.id}`} style={{ flex: 1 }}>
                 <Text style={styles.taskText}>{task.name}</Text>
               </Link>
               <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
@@ -107,6 +107,9 @@ const Homepage: React.FC = () => {
         </TouchableOpacity>
         <Link to="/add" style={ styles.navButton}>
           <Text style={styles.navButtonText}>Add Task</Text>
+        </Link>
+        <Link to="/profil" style={styles.navButton}>
+          <Text style={styles.navButtonText}>Profile</Text>
         </Link>
       </View>
     </View>

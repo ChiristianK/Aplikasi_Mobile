@@ -18,8 +18,8 @@ interface CourseFormData {
   description: string;
   lecturer: string;
   is_finished: boolean;
-  start_date: Date;
-  end_date: Date;
+  start_date: Date; // BEFORE
+  end_date: string; // AFTER
 }
 
 interface FormErrors {
@@ -36,8 +36,8 @@ const initialFormData: CourseFormData = {
   description: '',
   lecturer: '',
   is_finished: false,
-  start_date: new Date(),
-  end_date: new Date(),
+  start_date: new Date(), // BEFORE
+  end_date: "2024-12-12", // AFTER
 };
 
 const AddData: React.FC = () => {
@@ -87,6 +87,7 @@ const AddData: React.FC = () => {
           setFormData(initialFormData);
           navigate('/home');
         } else {
+          console.log(response);
           if (response.status === 401) {
             Alert.alert('Session expired', 'Please log in again.');
             logout();
@@ -189,7 +190,7 @@ const AddData: React.FC = () => {
           style={styles.dateButton}
           onPress={() => setShowStartDate(true)}
         >
-          <Text>{formData.start_date.toLocaleDateString()}</Text>
+          <Text>{formData.start_date}</Text>
         </TouchableOpacity>
         {showStartDate && (
           <DateTimePicker
@@ -206,7 +207,7 @@ const AddData: React.FC = () => {
           style={styles.dateButton}
           onPress={() => setShowEndDate(true)}
         >
-          <Text>{formData.end_date.toLocaleDateString()}</Text>
+          <Text>{formData.end_date}</Text>
         </TouchableOpacity>
         {showEndDate && (
           <DateTimePicker

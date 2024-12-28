@@ -73,26 +73,31 @@ const Homepage: React.FC = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>Completed Tasks</Text>
-        {completedTasks.map(task => (
-          <View key={task.id} style={styles.card}>
-            <Link to={`/EditData/${task.id}`}>
-              <View style={styles.cardFlex}>
-                <View style={styles.cardText}>
-                  <Text style={styles.taskText}>{task.name}</Text>
-                  <View style={styles.space}>
-                    <Text>{task.course}</Text>
-                    <Text>{task.lecturer}</Text>
+          {completedTasks.length > 0 ? (
+            completedTasks.map(task => (
+              <View key={task.id} style={styles.card}>
+                <Link to={`/EditData/${task.id}`}>
+                  <View style={styles.cardFlex}>
+                    <View style={styles.cardText}>
+                      <Text style={styles.taskText}>{task.name}</Text>
+                      <View style={styles.space}>
+                        <Text>{task.course}</Text>
+                        <Text>{task.lecturer}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.cardDelete}>
+                      <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
+                        <Text style={styles.deleteButton}>Delete Task</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-                <View style={styles.cardDelete}>
-                  <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
-                    <Text style={styles.deleteButton}>Delete Task</Text>
-                  </TouchableOpacity>
-                </View>
+                </Link>
               </View>
-            </Link>
-          </View>
-        ))}
+            ))
+          ) : (
+            <Text style={styles.noTasksText}>No tasks yet</Text>
+          )}
+
         {/* <View style={styles.taskContainer}>
           {completedTasks.map(task => (
             <View key={task.id} style={styles.taskItem}>
@@ -114,26 +119,30 @@ const Homepage: React.FC = () => {
 
         <Text style={styles.title}>Incomplete Tasks</Text>
         <View style={styles.content}>
-        {incompleteTasks.map(task => (
-          <View key={task.id} style={styles.card}>
-            <Link to={`/EditData/${task.id}`}>
-              <View style={styles.cardFlex}>
-                <View style={styles.cardText}>
-                  <Text style={styles.taskText}>{task.name}</Text>
-                  <View style={styles.space}>
-                    <Text>{task.course}</Text>
-                    <Text>{task.lecturer}</Text>
+          {incompleteTasks.length > 0 ? (
+            incompleteTasks.map(task => (
+              <View key={task.id} style={styles.card}>
+                <Link to={`/EditData/${task.id}`}>
+                  <View style={styles.cardFlex}>
+                    <View style={styles.cardText}>
+                      <Text style={styles.taskText}>{task.name}</Text>
+                      <View style={styles.space}>
+                        <Text>{task.course}</Text>
+                        <Text>{task.lecturer}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.cardDelete}>
+                      <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
+                        <Text style={styles.deleteButton}>Delete Task</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-                <View style={styles.cardDelete}>
-                  <TouchableOpacity onPress={() => console.log(`Delete task ${task.id}`)}>
-                    <Text style={styles.deleteButton}>Delete Task</Text>
-                  </TouchableOpacity>
-                </View>
+                </Link>
               </View>
-            </Link>
-          </View>
-        ))}
+            ))
+          ) : (
+            <Text style={styles.noTasksText}>No tasks yet</Text>
+          )}
         </View>
       </View>
 
@@ -176,6 +185,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     gap: 10,
+  },
+  noTasksText: {
+    textAlign: 'center',
+    marginVertical: 20,
+    fontSize: 16,
+    color: '#888',
   },
   cardText: {
     // backgroundColor: "red",

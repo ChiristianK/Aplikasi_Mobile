@@ -8,7 +8,7 @@ import { Link } from 'react-router-native';
 const EditData = () => {
     return (
     <View>
-        <Link to="/">
+        <Link to="/home">
             <Text>HomePage</Text>
         </Link>
     </View>
